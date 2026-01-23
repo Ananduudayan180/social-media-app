@@ -4,7 +4,7 @@ import 'package:social_media_app/features/auth/presentation/component/my_text_fi
 
 class RegisterPage extends StatefulWidget {
   final void Function()? toggle;
-  const RegisterPage({super.key,required this.toggle});
+  const RegisterPage({super.key, required this.toggle});
 
   @override
   State<RegisterPage> createState() => _RegisterPageState();
