@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:social_media_app/features/auth/presentation/component/my_botton.dart';
 import 'package:social_media_app/features/auth/presentation/component/my_text_field.dart';
+import 'package:social_media_app/features/auth/presentation/cubit/auth_cubit.dart';
 
 class RegisterPage extends StatefulWidget {
   final void Function()? toggle;
@@ -17,6 +19,33 @@ class _RegisterPageState extends State<RegisterPage> {
   final TextEditingController confirmPwController = TextEditingController();
   final TextEditingController nameController = TextEditingController();
   //
+
+  void register() {
+    final email = emailController.text;
+    final name = nameController.text;
+    final pw = pwController.text;
+    final confirmPw = confirmPwController.text;
+    final authCubit = context.read<AuthCubit>();
+
+    if (email.isNotEmpty &&
+        name.isNotEmpty &&
+        pw.isNotEmpty &&
+        confirmPw.isNotEmpty) {
+      if (pw == confirmPw) {
+        authCubit.register(name, email, pw);
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Password and confirm password do not match!'),
+          ),
+        );
+      }
+    } else {
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('Please fill all fields')));
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -75,7 +104,7 @@ class _RegisterPageState extends State<RegisterPage> {
                   ),
                   const SizedBox(height: 10),
                   //Register button
-                  MyBotton(text: 'Register', ontap: () {}),
+                  MyBotton(text: 'Register', ontap: register),
                   const SizedBox(height: 50),
 
                   Row(
