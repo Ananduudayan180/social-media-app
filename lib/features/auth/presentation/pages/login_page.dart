@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:social_media_app/features/auth/presentation/component/my_botton.dart';
 import 'package:social_media_app/features/auth/presentation/component/my_text_field.dart';
+import 'package:social_media_app/features/auth/presentation/cubit/auth_cubit.dart';
 
 class LoginPage extends StatefulWidget {
   final void Function()? onTap;
@@ -13,6 +15,23 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController pwController = TextEditingController();
+
+  void login() {
+    final email = emailController.text;
+    final pw = pwController.text;
+
+    //takes the already created AuthCubit
+    final authCubit = context.read<AuthCubit>();
+
+    if (email.isNotEmpty && pw.isNotEmpty) {
+      authCubit.login(email, pw);
+    } else {
+      //Error msg
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: const Text('Please enter both email and password')),
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -57,7 +76,7 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                   const SizedBox(height: 10),
                   //Login button
-                  MyBotton(text: 'Login', ontap: () {}),
+                  MyBotton(text: 'Login', ontap: login),
                   const SizedBox(height: 50),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
