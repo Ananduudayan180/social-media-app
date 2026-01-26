@@ -5,7 +5,7 @@ import 'package:social_media_app/features/auth/domain/repos/auth_repo.dart';
 import 'package:social_media_app/features/auth/presentation/cubit/auth_cubit.dart';
 import 'package:social_media_app/features/auth/presentation/cubit/auth_state.dart';
 import 'package:social_media_app/features/auth/presentation/pages/auth_pages.dart';
-import 'package:social_media_app/features/post/presentation/pages/home_page.dart';
+import 'package:social_media_app/features/home/presentation/pages/home_page.dart';
 import 'package:social_media_app/themes/light_mode.dart';
 
 //root level of the app
