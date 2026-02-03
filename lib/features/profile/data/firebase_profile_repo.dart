@@ -4,7 +4,7 @@ import 'package:social_media_app/features/profile/domain/repos/profile_repo.dart
 
 class FirebaseProfileRepo extends ProfileRepo {
   final CollectionReference firestore = FirebaseFirestore.instance.collection(
-    'user',
+    'users',
   );
 
   @override
@@ -19,8 +19,8 @@ class FirebaseProfileRepo extends ProfileRepo {
             email: userData['email'],
             name: userData['name'],
             uid: uid,
-            bio: userData['bio'],
-            profileImageUrl: userData['profileImageUrl'],
+            bio: userData['bio'] ?? '',
+            profileImageUrl: userData['profileImageUrl'].toString(),
           );
         }
       }
