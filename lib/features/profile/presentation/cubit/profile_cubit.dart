@@ -38,7 +38,7 @@ class ProfileCubit extends Cubit<ProfileState> {
       //call update user profile
       await profileRepo.updateProfile(updatedProfile);
       //calling updated user(fetch user)
-      await profileRepo.fetchUser(uid);
+      await fetchUserProfile(uid);
     } catch (e) {
       emit(ProfileError('Error updating profile$e'));
     }
