@@ -1,11 +1,14 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:social_media_app/features/profile/domain/entities/profile_user.dart';
 import 'package:social_media_app/features/profile/domain/repos/profile_repo.dart';
+import 'package:social_media_app/features/storage/domin/storage_repo.dart';
 part 'profile_state.dart';
 
 class ProfileCubit extends Cubit<ProfileState> {
   final ProfileRepo profileRepo;
-  ProfileCubit({required this.profileRepo}) : super(ProfileInitial());
+  final StorageRepo storageRepo;
+  ProfileCubit({required this.profileRepo, required this.storageRepo})
+    : super(ProfileInitial());
 
   Future<void> fetchUserProfile(String uid) async {
     emit(ProfileLoading());
