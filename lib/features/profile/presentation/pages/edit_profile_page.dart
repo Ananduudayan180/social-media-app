@@ -1,4 +1,6 @@
+import 'dart:io';
 import 'dart:typed_data';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/foundation.dart' show kIsWeb; //true == web
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
@@ -87,13 +89,14 @@ class _EditProfilePageState extends State<EditProfilePage> {
     );
   }
 
-  Widget buildEditPage({double uploadProgess = 0.0}) {
+  Widget buildEditPage() {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
         title: const Text('Edit Profile'),
         foregroundColor: Theme.of(context).colorScheme.primary,
         actions: [
+          //update button
           IconButton(
             onPressed: () {
               updateProfile();
@@ -104,7 +107,43 @@ class _EditProfilePageState extends State<EditProfilePage> {
       ),
       body: Column(
         children: [
-          //profile pic
+          //profile pic container
+          Container(
+            clipBehavior: Clip.antiAliasWithSaveLayer,
+            width: 200,
+            height: 200,
+            decoration: BoxDecoration(
+              color: Theme.of(context).colorScheme.secondary,
+              shape: BoxShape.circle,
+            ),
+            //image loading conditions
+            child: (!kIsWeb && imagePickerFile != null)
+                ? Image.file(File(imagePickerFile!.path!), fit: BoxFit.cover)
+                : (kIsWeb && webImage != null)
+                ? Image.memory(webImage!, fit: BoxFit.cover)
+                : CachedNetworkImage(
+                    imageUrl:
+                        "${widget.user.profileImageUrl}?v=${DateTime.now().millisecondsSinceEpoch}",
+                    //loading
+                    placeholder: (context, url) =>
+                        const CircularProgressIndicator(),
+                    errorWidget: (context, url, error) => Icon(
+                      Icons.person,
+                      size: 72,
+                      color: Theme.of(context).colorScheme.primary,
+                    ),
+                    imageBuilder: (context, imageProvider) =>
+                        Image(image: imageProvider, fit: BoxFit.cover),
+                  ),
+          ),
+          //pick image button
+          const SizedBox(height: 25),
+          MaterialButton(
+            onPressed: pickImage,
+            color: Colors.blue,
+            child: Text('Pick Image'),
+          ),
+          //bio
           const Text('Bio'),
           const SizedBox(height: 10),
           Padding(
