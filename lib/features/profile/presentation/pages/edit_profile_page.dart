@@ -1,3 +1,6 @@
+import 'dart:typed_data';
+import 'package:flutter/foundation.dart' show kIsWeb; //true == web
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:social_media_app/features/auth/presentation/component/my_text_field.dart';
@@ -14,16 +17,48 @@ class EditProfilePage extends StatefulWidget {
 
 class _EditProfilePageState extends State<EditProfilePage> {
   final bioTextcontroller = TextEditingController();
+  PlatformFile? imagePickerFile;
+  Uint8List? webImage; //web
+
+  Future<void> pickImage() async {
+    final result = await FilePicker.platform.pickFiles(
+      type: FileType.image,
+      withData: kIsWeb,
+    );
+
+    if (result != null) {
+      setState(() {
+        imagePickerFile = result.files.first;
+      });
+
+      if (kIsWeb) {
+        webImage = imagePickerFile!.bytes;
+      }
+    }
+  }
 
   //update profile function
   void updateProfile() {
     final profileCubit = context.read<ProfileCubit>();
 
-    if (bioTextcontroller.text.isNotEmpty) {
+    // final uid = widget.user.uid;
+    final imageMobilePath = kIsWeb ? null : imagePickerFile?.path;
+    final imageWebBytes = kIsWeb ? imagePickerFile?.bytes : null;
+    final String? newBio = bioTextcontroller.text.isNotEmpty
+        ? bioTextcontroller.text
+        : null;
+
+    //check bio or image is null while user edit the profile
+    if (imagePickerFile != null || newBio != null) {
       profileCubit.updateUserProfile(
         uid: widget.user.uid,
-        newBio: bioTextcontroller.text,
+        newBio: newBio,
+        imageMobilePath: imageMobilePath,
+        imageWebBytes: imageWebBytes,
       );
+    } else {
+      //otherwise pop
+      Navigator.pop(context);
     }
   }
 
