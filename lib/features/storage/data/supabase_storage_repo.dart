@@ -31,7 +31,9 @@ class SupabaseStorageRepo implements StorageRepo {
   ) async {
     try {
       final file = File(path);
-      await supabase.storage.from(folder).upload(fileName, file);
+      await supabase.storage
+          .from(folder)
+          .upload(fileName, file, fileOptions: FileOptions(upsert: true));
 
       final url = supabase.storage.from(folder).getPublicUrl(fileName);
 
@@ -48,7 +50,13 @@ class SupabaseStorageRepo implements StorageRepo {
     String folder,
   ) async {
     try {
-      await supabase.storage.from(folder).uploadBinary(fileName, fileBytes);
+      await supabase.storage
+          .from(folder)
+          .uploadBinary(
+            fileName,
+            fileBytes,
+            fileOptions: FileOptions(upsert: true),
+          );
 
       final url = supabase.storage.from(folder).getPublicUrl(fileName);
 
