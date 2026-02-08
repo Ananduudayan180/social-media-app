@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:social_media_app/features/auth/presentation/cubit/auth_cubit.dart';
 import 'package:social_media_app/features/home/presentation/components/my_drawer_tile.dart';
+import 'package:social_media_app/features/profile/presentation/pages/profile_page.dart';
 
 class MyDrawer extends StatelessWidget {
   const MyDrawer({super.key});
@@ -25,11 +28,27 @@ class MyDrawer extends StatelessWidget {
               //Divider
               Divider(color: Theme.of(context).colorScheme.secondary),
               //list
-              MyDrawerTile(title: 'H O M E', icon: Icons.home, onTap: () {}),
+              MyDrawerTile(
+                title: 'H O M E',
+                icon: Icons.home,
+                onTap: () => Navigator.of(context).pop(),
+              ),
               MyDrawerTile(
                 title: 'P R O F I L E',
                 icon: Icons.person,
-                onTap: () {},
+                onTap: () {
+                  Navigator.of(context).pop();
+                  //get uid from current user
+                  final user = context.read<AuthCubit>().currentUser;
+                  String? uid = user!.uid;
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (ctx) {
+                        return ProfilePage(uid: uid);
+                      },
+                    ),
+                  );
+                },
               ),
               MyDrawerTile(
                 title: 'S E A R C H',
@@ -45,7 +64,7 @@ class MyDrawer extends StatelessWidget {
               MyDrawerTile(
                 title: 'L O G O U T',
                 icon: Icons.logout,
-                onTap: () {},
+                onTap: () => context.read<AuthCubit>().logout(),
               ),
             ],
           ),
