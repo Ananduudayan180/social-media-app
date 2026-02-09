@@ -11,12 +11,30 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  late final postCubit = context.read<PostCubit>();
+
+  @override
+  void initState() {
+    super.initState();
+    fetchAllPosts();
+  }
+
+  void fetchAllPosts() {
+    postCubit.fetchAllPosts();
+  }
+
+  void deletePost(String postId) async {
+    await postCubit.deletePost(postId);
+    fetchAllPosts();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text('Home'),
         centerTitle: true,
+        foregroundColor: Theme.of(context).colorScheme.primary,
         actions: [
           IconButton(
             onPressed: () => Navigator.of(context).push(
