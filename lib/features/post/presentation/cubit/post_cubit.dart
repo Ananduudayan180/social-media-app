@@ -22,14 +22,11 @@ class PostCubit extends Cubit<PostState> {
       // handle image upload for mobile platform (using file path)
       if (imagePath != null) {
         emit(PostUploading());
-        imageUrl = await storageRepo.uploadProfileImageMobile(
-          imagePath,
-          post.id,
-        );
+        imageUrl = await storageRepo.uploadPostImageMobile(imagePath, post.id);
       } else if (imageBytes != null) {
         // handle image upload for web platform (using bytes)
         emit(PostUploading());
-        imageUrl = await storageRepo.uploadProfileImageWeb(imageBytes, post.id);
+        imageUrl = await storageRepo.uploadPostImageWeb(imageBytes, post.id);
       }
       final newPost = post.copyWith(imageUrl: imageUrl);
       //store post data in firestore
