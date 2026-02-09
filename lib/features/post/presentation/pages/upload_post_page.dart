@@ -1,5 +1,4 @@
 import 'dart:io';
-import 'dart:math';
 import 'dart:typed_data';
 import 'package:flutter/foundation.dart' show kIsWeb; //true == web
 import 'package:file_picker/file_picker.dart';
@@ -94,7 +93,11 @@ class _UploadPostPagesState extends State<UploadPostPage> {
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<PostCubit, PostState>(
-      listener: (context, state) {},
+      listener: (context, state) {
+        if (state is PostsLoaded) {
+          Navigator.pop(context);
+        }
+      },
       builder: (context, state) {
         if (state is PostUploading || state is PostsLoading) {
           return const Scaffold(
@@ -114,7 +117,9 @@ class _UploadPostPagesState extends State<UploadPostPage> {
         title: const Text('Create Post'),
         centerTitle: true,
         foregroundColor: Theme.of(context).colorScheme.primary,
-        actions: [IconButton(onPressed: uploadPost, icon: Icon(Icons.check))],
+        actions: [
+          IconButton(onPressed: uploadPost, icon: const Icon(Icons.upload)),
+        ],
       ),
       body: Center(
         child: Column(
