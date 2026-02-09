@@ -32,8 +32,9 @@ class PostCubit extends Cubit<PostState> {
         imageUrl = await storageRepo.uploadProfileImageWeb(imageBytes, post.id);
       }
       final newPost = post.copyWith(imageUrl: imageUrl);
-
-      postRepo.createPost(newPost);
+      //store post data in firestore
+      await postRepo.createPost(newPost);
+      fetchAllPosts();
     } catch (e) {
       emit(PostError('Failed to create post: $e'));
     }
