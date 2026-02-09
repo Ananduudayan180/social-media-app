@@ -6,6 +6,23 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 class SupabaseStorageRepo implements StorageRepo {
   final supabase = Supabase.instance.client;
 
+  //POST IMAGES
+  //Mobile platform
+  @override
+  Future<String?> uploadPostImageMobile(String path, String fileName) async {
+    return _uploadFile(path, fileName, 'post_images');
+  }
+
+  //Web platform
+  @override
+  Future<String?> uploadPostImageWeb(
+    Uint8List fileBytes,
+    String fileName,
+  ) async {
+    return _uploadFileBytes(fileBytes, fileName, 'post_images');
+  }
+
+  //PROFILE PICTURES
   //Mobile platform
   @override
   Future<String?> uploadProfileImageMobile(String path, String fileName) async {
@@ -22,6 +39,7 @@ class SupabaseStorageRepo implements StorageRepo {
   }
 
   //HELPER METHODS - to upload files to storage
+  /*---------------------------------------------------------------------------------------------------------------*/
 
   //mobile platform (file)
   Future<String?> _uploadFile(
