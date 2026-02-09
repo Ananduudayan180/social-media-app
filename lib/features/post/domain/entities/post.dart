@@ -48,7 +48,7 @@ class Post {
       userName: json['userName'],
       text: json['text'],
       imageUrl: json['imageUrl'],
-      timestamp: DateTime.parse(json['timestamp']),
+      timestamp: (json['timestamp'] as Timestamp).toDate(),
     );
   }
 }
