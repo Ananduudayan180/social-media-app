@@ -19,10 +19,10 @@ class _HomePageState extends State<HomePage> {
         centerTitle: true,
         actions: [
           IconButton(
-            onPressed: () {
-              context.read<AuthCubit>().logout();
-            },
-            icon: Icon(Icons.logout),
+            onPressed: () => Navigator.of(context).push(
+              MaterialPageRoute(builder: (context) => const UploadPostPage()),
+            ),
+            icon: Icon(Icons.add),
           ),
         ],
       ),
