@@ -10,7 +10,7 @@ class FirebasePostRepo extends PostRepo {
   @override
   Future<void> createPost(Post post) async {
     try {
-      await postsCollection.doc(post.id).set({post.toJson()});
+      await postsCollection.doc(post.id).set(post.toJson());
     } catch (e) {
       throw Exception('Error creating post: $e');
     }
