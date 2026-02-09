@@ -14,7 +14,7 @@ class ProfileCubit extends Cubit<ProfileState> {
   Future<void> fetchUserProfile(String uid) async {
     emit(ProfileLoading());
     try {
-      final user = await profileRepo.fetchUser(uid);
+      final user = await profileRepo.fetchUserProfile(uid);
 
       if (user != null) {
         emit(ProfileLoaded(user));
@@ -35,7 +35,7 @@ class ProfileCubit extends Cubit<ProfileState> {
     emit(ProfileLoading());
     try {
       //fetch current user profile first
-      final currentUser = await profileRepo.fetchUser(uid);
+      final currentUser = await profileRepo.fetchUserProfile(uid);
       if (currentUser == null) {
         emit(ProfileError('Failed to update profile'));
         return;

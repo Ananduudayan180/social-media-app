@@ -8,7 +8,7 @@ class FirebaseProfileRepo extends ProfileRepo {
   );
 
   @override
-  Future<ProfileUser?> fetchUser(String uid) async {
+  Future<ProfileUser?> fetchUserProfile(String uid) async {
     try {
       final userDoc = await firestore.doc(uid).get();
       if (userDoc.exists) {
