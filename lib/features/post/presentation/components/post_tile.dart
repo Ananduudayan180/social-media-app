@@ -1,0 +1,190 @@
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:social_media_app/features/auth/domain/entities/app_user.dart';
+import 'package:social_media_app/features/auth/presentation/cubit/auth_cubit.dart';
+import 'package:social_media_app/features/post/domain/entities/post.dart';
+import 'package:social_media_app/features/post/presentation/cubit/post_cubit.dart';
+import 'package:social_media_app/features/profile/domain/entities/profile_user.dart';
+import 'package:social_media_app/features/profile/presentation/cubit/profile_cubit.dart';
+
+class PostTile extends StatefulWidget {
+  final Post post;
+  final void Function()? onDeleteTap;
+  const PostTile({super.key, required this.post, required this.onDeleteTap});
+
+  @override
+  State<PostTile> createState() => _PostTileState();
+}
+
+class _PostTileState extends State<PostTile> {
+  //cubit instance
+  late final postCubit = context.read<PostCubit>();
+  late final profileCubit = context.read<ProfileCubit>();
+
+  bool isOwnPost = false;
+  //current user
+  AppUser? currentUser;
+  //post user
+  ProfileUser? postUser;
+
+  @override
+  void initState() {
+    super.initState();
+    getCurrentUser();
+    fetchPostUser();
+  }
+
+  void getCurrentUser() {
+    final authCubit = context.read<AuthCubit>();
+    currentUser = authCubit.currentUser;
+
+    isOwnPost = widget.post.userId == currentUser!.uid;
+  }
+
+  //user profile image url kittan vendi || widget.post il profile image url illa
+  void fetchPostUser() async {
+    final fetchUser = await profileCubit.getUserProfile(widget.post.userId);
+    if (fetchUser != null) {
+      setState(() {
+        postUser = fetchUser;
+      });
+    }
+  }
+
+  //show options for deleting post
+  void showOptions() {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text('Delete Post'),
+        content: Text('Are you sure you want to delete this post?'),
+        actions: [
+          //cancel button
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: Text('Cancel'),
+          ),
+          TextButton(
+            onPressed: () {
+              widget.onDeleteTap!();
+              Navigator.of(context).pop();
+            },
+            child: Text('Delete'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      child: Column(
+        children: [
+          //TOP SECTION ROW
+          Padding(
+            padding: const EdgeInsets.all(12.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                //profile image circle
+                postUser?.profileImageUrl != null
+                    ? CachedNetworkImage(
+                        imageUrl: postUser!.profileImageUrl,
+                        errorWidget: (context, url, error) =>
+                            const Icon(Icons.person),
+                        imageBuilder: (context, imageProvider) => Container(
+                          width: 40,
+                          height: 40,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            image: DecorationImage(
+                              image: imageProvider,
+                              fit: BoxFit.cover,
+                            ),
+                          ),
+                        ),
+                      )
+                    //profile image person icon
+                    : const Icon(Icons.person),
+                const SizedBox(width: 10),
+                //user name
+                Text(
+                  widget.post.userName,
+                  style: TextStyle(
+                    color: Theme.of(context).colorScheme.inversePrimary,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                const Spacer(),
+                //delete button only for own post
+                if (isOwnPost)
+                  GestureDetector(
+                    onTap: showOptions,
+                    child: Icon(
+                      Icons.delete,
+                      color: Theme.of(context).colorScheme.primary,
+                    ),
+                  ),
+              ],
+            ),
+          ),
+          //POST IMAGE SECTION
+          CachedNetworkImage(
+            imageUrl: widget.post.imageUrl,
+            height: 430,
+            width: double.infinity,
+            fit: BoxFit.cover,
+            //placeholder
+            placeholder: (context, url) => const SizedBox(
+              height: 430,
+              child: Center(child: CircularProgressIndicator()),
+            ),
+            //error widget
+            errorWidget: (context, url, error) => const Icon(Icons.error),
+          ),
+          //CAPTION SECTION - Like, Timestamp and comments
+          Padding(
+            padding: const EdgeInsets.all(20),
+            child: Row(
+              children: [
+                //like button
+                Icon(
+                  Icons.favorite_border,
+                  color: Theme.of(context).colorScheme.primary,
+                ),
+                Text(
+                 '0',
+                  style: TextStyle(
+                    color: Theme.of(context).colorScheme.inversePrimary,
+                    fontSize: 12,
+                  ),
+                ),
+                const SizedBox(width: 20),
+                //comment button
+                Icon(Icons.comment, color: Theme.of(context).colorScheme.primary),
+                Text(
+                 '0',
+                  style: TextStyle(
+                    color: Theme.of(context).colorScheme.inversePrimary,
+                    fontSize: 12,
+                  ),
+                ),
+                Spacer(),
+                //timestamp
+                Text(
+                  widget.post.timestamp.toString(),
+                  style: TextStyle(
+                    color: Theme.of(context).colorScheme.inversePrimary,
+                    fontSize: 12,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
