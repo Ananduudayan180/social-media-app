@@ -5,4 +5,8 @@ abstract class PostRepo {
   Future<void> createPost(Post post);
   Future<void> deletePost(String postId);
   Future<List<Post>> fetchPostByUserId(String userId);
+  Future<void> toggleLikePost(
+    String postId,
+    String userId,
+  ); //postId means which post to like/unlike, userId means who is liking/unliking
 }
