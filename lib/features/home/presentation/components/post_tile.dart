@@ -1,6 +1,12 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:social_media_app/features/auth/domain/entities/app_user.dart';
+import 'package:social_media_app/features/auth/presentation/cubit/auth_cubit.dart';
 import 'package:social_media_app/features/post/domain/entities/post.dart';
+import 'package:social_media_app/features/post/presentation/cubit/post_cubit.dart';
+import 'package:social_media_app/features/profile/domain/entities/profile_user.dart';
+import 'package:social_media_app/features/profile/presentation/cubit/profile_cubit.dart';
 
 class PostTile extends StatefulWidget {
   final Post post;
@@ -12,6 +18,40 @@ class PostTile extends StatefulWidget {
 }
 
 class _PostTileState extends State<PostTile> {
+  //cubit instance
+  late final postCubit = context.read<PostCubit>();
+  late final profileCubit = context.read<ProfileCubit>();
+
+  bool isOwnPost = false;
+  //current user
+  AppUser? currentUser;
+  //post user
+  ProfileUser? postUser;
+
+  @override
+  void initState() {
+    super.initState();
+    getCurrentUser();
+    fetchPostUser();
+  }
+
+  void getCurrentUser() {
+    final authCubit = context.read<AuthCubit>();
+    currentUser = authCubit.currentUser;
+
+    isOwnPost = widget.post.userId == currentUser!.uid;
+  }
+
+  //user profile image url kittan vendi || widget.post il profile image url illa
+  void fetchPostUser() async {
+    final fetchUser = await profileCubit.getUserProfile(widget.post.userId);
+    if (fetchUser != null) {
+      setState(() {
+        postUser = fetchUser;
+      });
+    }
+  }
+
   //show options for deleting post
   void showOptions() {
     showDialog(
