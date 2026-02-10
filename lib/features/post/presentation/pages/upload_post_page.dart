@@ -122,27 +122,29 @@ class _UploadPostPagesState extends State<UploadPostPage> {
         ],
       ),
       body: Center(
-        child: Column(
-          children: [
-            //Image preview
-            if (kIsWeb && webImage != null)
-              Image.memory(webImage!, fit: BoxFit.cover),
-            if (!kIsWeb && imagePickedFile != null)
-              Image.file(File(imagePickedFile!.path!), fit: BoxFit.cover),
-            //pick image button
-            MaterialButton(
-              onPressed: pickImage,
-              color: Colors.blue,
-              child: Text('Pick Image'),
-            ),
-            SizedBox(height: 16),
-            TextField(
-              controller: textController,
-              decoration: InputDecoration(hintText: 'Write a caption...'),
-              maxLines: null,
-              obscureText: false,
-            ),
-          ],
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              //Image preview
+              if (kIsWeb && webImage != null)
+                Image.memory(webImage!, fit: BoxFit.cover),
+              if (!kIsWeb && imagePickedFile != null)
+                Image.file(File(imagePickedFile!.path!), fit: BoxFit.cover),
+              //pick image button
+              MaterialButton(
+                onPressed: pickImage,
+                color: Colors.blue,
+                child: Text('Pick Image'),
+              ),
+              SizedBox(height: 16),
+              TextField(
+                controller: textController,
+                decoration: InputDecoration(hintText: 'Write a caption...'),
+                maxLines: null,
+                obscureText: false,
+              ),
+            ],
+          ),
         ),
       ),
     );
