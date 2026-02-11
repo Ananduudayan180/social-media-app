@@ -6,7 +6,9 @@ import 'package:social_media_app/features/auth/presentation/component/my_text_fi
 import 'package:social_media_app/features/auth/presentation/cubit/auth_cubit.dart';
 import 'package:social_media_app/features/post/domain/entities/comment.dart';
 import 'package:social_media_app/features/post/domain/entities/post.dart';
+import 'package:social_media_app/features/post/presentation/components/comment_tile.dart';
 import 'package:social_media_app/features/post/presentation/cubit/post_cubit.dart';
+import 'package:social_media_app/features/post/presentation/cubit/post_state.dart';
 import 'package:social_media_app/features/profile/domain/entities/profile_user.dart';
 import 'package:social_media_app/features/profile/presentation/cubit/profile_cubit.dart';
 
@@ -99,7 +101,7 @@ class _PostTileState extends State<PostTile> {
     postCubit.addComment(widget.post.id, newComment);
   }
 
-   @override
+  @override
   void dispose() {
     commentTextController.dispose();
     super.dispose();
@@ -284,20 +286,56 @@ class _PostTileState extends State<PostTile> {
               ],
             ),
           ),
+          //CAPTION SECTION
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10),
             child: Row(
               children: [
-                //useraName
+                //Post userName
                 Text(
                   widget.post.userName,
                   style: TextStyle(fontWeight: FontWeight.bold),
                 ),
                 const SizedBox(width: 10),
-                //Comment text
+                //Caption text
                 Text(widget.post.text),
               ],
             ),
+          ),
+          //COMMENTS SECTION - show users comments
+          //Building comments
+          BlocBuilder<PostCubit, PostState>(
+            builder: (context, state) {
+              //Loaded
+              if (state is PostsLoaded) {
+                final post = state.posts.firstWhere(
+                  (post) => post.id == widget.post.id,
+                );
+                if (post.comments.isNotEmpty) {
+                  int showCommentCount = post.comments.length;
+                  return ListView.builder(
+                    itemCount: showCommentCount,
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    itemBuilder: (context, index) {
+                      final comment = post.comments[index];
+                      //comment tile
+                      return CommentTile(comment: comment);
+                    },
+                  );
+                }
+              }
+              //Loading
+              if (state is PostUploading) {
+                return const Center(child: CircularProgressIndicator());
+              }
+              //Error
+              if (state is PostError) {
+                return Center(child: Text(state.errorMsg));
+              } else {
+                return const SizedBox();
+              }
+            },
           ),
         ],
       ),
