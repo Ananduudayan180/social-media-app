@@ -77,6 +77,33 @@ class _PostTileState extends State<PostTile> {
     );
   }
 
+  //toggle like for a post
+  void toggleLikePost() {
+    //current user like status
+    final isLiked = widget.post.likes.contains(currentUser!.uid);
+
+    //optimistically update the UI
+    setState(() {
+      if (isLiked) {
+        widget.post.likes.remove(currentUser!.uid);
+      } else {
+        widget.post.likes.add(currentUser!.uid);
+      }
+    });
+    postCubit.toggleLikePost(widget.post.id, currentUser!.uid).catchError((
+      error,
+    ) {
+      //revert the like status in case of error
+      setState(() {
+        if (isLiked) {
+          widget.post.likes.add(currentUser!.uid);
+        } else {
+          widget.post.likes.remove(currentUser!.uid);
+        }
+      });
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return SizedBox(
@@ -150,22 +177,39 @@ class _PostTileState extends State<PostTile> {
             child: Row(
               children: [
                 //like button
+                SizedBox(
+                  width: 50,
+                  child: Row(
+                    children: [
+                      GestureDetector(
+                        onTap: toggleLikePost,
+                        child: Icon(
+                          widget.post.likes.contains(currentUser!.uid)
+                              ? Icons.favorite
+                              : Icons.favorite_border,
+                          color: widget.post.likes.contains(currentUser!.uid)
+                              ? Colors.red
+                              : Theme.of(context).colorScheme.primary,
+                        ),
+                      ),
+                      const SizedBox(width: 5),
+                      Text(
+                        widget.post.likes.length.toString(),
+                        style: TextStyle(
+                          color: Theme.of(context).colorScheme.primary,
+                          fontSize: 12,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                //comment button
                 Icon(
-                  Icons.favorite_border,
+                  Icons.comment,
                   color: Theme.of(context).colorScheme.primary,
                 ),
                 Text(
-                 '0',
-                  style: TextStyle(
-                    color: Theme.of(context).colorScheme.inversePrimary,
-                    fontSize: 12,
-                  ),
-                ),
-                const SizedBox(width: 20),
-                //comment button
-                Icon(Icons.comment, color: Theme.of(context).colorScheme.primary),
-                Text(
-                 '0',
+                  '0',
                   style: TextStyle(
                     color: Theme.of(context).colorScheme.inversePrimary,
                     fontSize: 12,
