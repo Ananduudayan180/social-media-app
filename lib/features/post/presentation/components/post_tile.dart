@@ -99,6 +99,11 @@ class _PostTileState extends State<PostTile> {
     postCubit.addComment(widget.post.id, newComment);
   }
 
+   @override
+  void dispose() {
+    commentTextController.dispose();
+    super.dispose();
+  }
 
   //show options for deleting post
   void showOptions() {
