@@ -11,6 +11,7 @@ import 'package:social_media_app/features/post/presentation/cubit/post_cubit.dar
 import 'package:social_media_app/features/post/presentation/cubit/post_state.dart';
 import 'package:social_media_app/features/profile/domain/entities/profile_user.dart';
 import 'package:social_media_app/features/profile/presentation/cubit/profile_cubit.dart';
+import 'package:social_media_app/features/profile/presentation/pages/profile_page.dart';
 
 class PostTile extends StatefulWidget {
   final Post post;
@@ -165,51 +166,59 @@ class _PostTileState extends State<PostTile> {
       child: Column(
         children: [
           //TOP SECTION ROW
-          Padding(
-            padding: const EdgeInsets.all(12.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                //profile image circle
-                postUser?.profileImageUrl != null
-                    ? CachedNetworkImage(
-                        imageUrl: postUser!.profileImageUrl,
-                        errorWidget: (context, url, error) =>
-                            const Icon(Icons.person),
-                        imageBuilder: (context, imageProvider) => Container(
-                          width: 40,
-                          height: 40,
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            image: DecorationImage(
-                              image: imageProvider,
-                              fit: BoxFit.cover,
+          GestureDetector(
+            //go to profile page
+            onTap: () => Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (context) => ProfilePage(uid: widget.post.userId),
+              ),
+            ),
+            child: Padding(
+              padding: const EdgeInsets.all(12.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  //profile image circle
+                  postUser?.profileImageUrl != null
+                      ? CachedNetworkImage(
+                          imageUrl: postUser!.profileImageUrl,
+                          errorWidget: (context, url, error) =>
+                              const Icon(Icons.person),
+                          imageBuilder: (context, imageProvider) => Container(
+                            width: 40,
+                            height: 40,
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              image: DecorationImage(
+                                image: imageProvider,
+                                fit: BoxFit.cover,
+                              ),
                             ),
                           ),
-                        ),
-                      )
-                    //profile image person icon
-                    : const Icon(Icons.person),
-                const SizedBox(width: 10),
-                //user name
-                Text(
-                  widget.post.userName,
-                  style: TextStyle(
-                    color: Theme.of(context).colorScheme.inversePrimary,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                const Spacer(),
-                //delete button only for own post
-                if (isOwnPost)
-                  GestureDetector(
-                    onTap: showOptions,
-                    child: Icon(
-                      Icons.delete,
-                      color: Theme.of(context).colorScheme.primary,
+                        )
+                      //profile image person icon
+                      : const Icon(Icons.person),
+                  const SizedBox(width: 10),
+                  //user name
+                  Text(
+                    widget.post.userName,
+                    style: TextStyle(
+                      color: Theme.of(context).colorScheme.inversePrimary,
+                      fontWeight: FontWeight.bold,
                     ),
                   ),
-              ],
+                  const Spacer(),
+                  //delete button only for own post
+                  if (isOwnPost)
+                    GestureDetector(
+                      onTap: showOptions,
+                      child: Icon(
+                        Icons.delete,
+                        color: Theme.of(context).colorScheme.primary,
+                      ),
+                    ),
+                ],
+              ),
             ),
           ),
           //POST IMAGE SECTION
