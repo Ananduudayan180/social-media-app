@@ -1,3 +1,4 @@
+import 'package:social_media_app/features/post/domain/entities/comment.dart';
 import 'package:social_media_app/features/post/domain/entities/post.dart';
 
 abstract class PostRepo {
@@ -8,5 +9,7 @@ abstract class PostRepo {
   Future<void> toggleLikePost(
     String postId,
     String userId,
-  ); //postId means which post to like/unlike, userId means who is liking/unliking
+  ); //toggleLikePost: postId means which post to like/unlike, userId means who is liking/unliking
+  Future<void> addComment(String postId, Comment comment);
+  Future<void> deleteComment(String postId, String commentId);
 }
