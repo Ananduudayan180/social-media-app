@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:social_media_app/features/auth/domain/entities/app_user.dart';
 import 'package:social_media_app/features/auth/presentation/component/my_text_field.dart';
 import 'package:social_media_app/features/auth/presentation/cubit/auth_cubit.dart';
+import 'package:social_media_app/features/post/domain/entities/comment.dart';
 import 'package:social_media_app/features/post/domain/entities/post.dart';
 import 'package:social_media_app/features/post/presentation/cubit/post_cubit.dart';
 import 'package:social_media_app/features/profile/domain/entities/profile_user.dart';
@@ -73,6 +74,7 @@ class _PostTileState extends State<PostTile> {
           ),
           TextButton(
             onPressed: () {
+              addComment();
               Navigator.of(context).pop();
             },
             child: Text('Post'),
@@ -81,6 +83,22 @@ class _PostTileState extends State<PostTile> {
       ),
     );
   }
+
+  //add comment to post
+  void addComment() {
+    if (commentTextController.text.isEmpty) return;
+    //create comment object
+    final newComment = Comment(
+      id: DateTime.now().millisecondsSinceEpoch.toString(),
+      postId: widget.post.id,
+      userId: widget.post.userId,
+      userName: widget.post.userName,
+      text: commentTextController.text,
+      timestamp: DateTime.now(),
+    );
+    postCubit.addComment(widget.post.id, newComment);
+  }
+
 
   //show options for deleting post
   void showOptions() {
@@ -234,14 +252,18 @@ class _PostTileState extends State<PostTile> {
                   ),
                 ),
                 //comment button
-                Icon(
-                  Icons.comment,
-                  color: Theme.of(context).colorScheme.primary,
+                GestureDetector(
+                  onTap: () => openNewCommentBox(),
+                  child: Icon(
+                    Icons.comment,
+                    color: Theme.of(context).colorScheme.primary,
+                  ),
                 ),
+                SizedBox(width: 5),
                 Text(
-                  '0',
+                  widget.post.comments.length.toString(),
                   style: TextStyle(
-                    color: Theme.of(context).colorScheme.inversePrimary,
+                    color: Theme.of(context).colorScheme.primary,
                     fontSize: 12,
                   ),
                 ),
@@ -254,6 +276,21 @@ class _PostTileState extends State<PostTile> {
                     fontSize: 12,
                   ),
                 ),
+              ],
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10),
+            child: Row(
+              children: [
+                //useraName
+                Text(
+                  widget.post.userName,
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
+                const SizedBox(width: 10),
+                //Comment text
+                Text(widget.post.text),
               ],
             ),
           ),
