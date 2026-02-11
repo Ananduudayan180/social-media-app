@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:social_media_app/features/auth/domain/entities/app_user.dart';
+import 'package:social_media_app/features/auth/presentation/component/my_text_field.dart';
 import 'package:social_media_app/features/auth/presentation/cubit/auth_cubit.dart';
 import 'package:social_media_app/features/post/domain/entities/post.dart';
 import 'package:social_media_app/features/post/presentation/cubit/post_cubit.dart';
@@ -50,6 +51,35 @@ class _PostTileState extends State<PostTile> {
         postUser = fetchUser;
       });
     }
+  }
+
+  //COMMENT SECTION - dialog box
+  final commentTextController = TextEditingController();
+
+  void openNewCommentBox() {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text('Add Comment'),
+        content: MyTextField(
+          controller: commentTextController,
+          hintText: 'Add comment',
+          obscureText: false,
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: Text('Cancel'),
+          ),
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+            child: Text('Post'),
+          ),
+        ],
+      ),
+    );
   }
 
   //show options for deleting post
