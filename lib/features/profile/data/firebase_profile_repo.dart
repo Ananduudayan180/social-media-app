@@ -41,4 +41,42 @@ class FirebaseProfileRepo extends ProfileRepo {
       throw Exception(e);
     }
   }
+
+  @override
+  Future<void> toggleFollow(String currentUid, String targetUid) async {
+    try {
+      //get users
+      final currentUserDoc = await usersCollection.doc(currentUid).get();
+      final targetUserDoc = await usersCollection.doc(targetUid).get();
+      //check user doc is extits
+      if (currentUserDoc.exists && targetUserDoc.exists) {
+        final currentUserData = currentUserDoc.data() as Map<String, dynamic>?;
+        final targetUserData = targetUserDoc.data() as Map<String, dynamic>?;
+        //check user data(json) is available or not
+        if (currentUserData != null && targetUserData != null) {
+          final List<String> currentUserFollowing = List<String>.from(
+            currentUserData['following'] ?? [],
+          );
+
+          if (currentUserFollowing.contains(targetUid)) {
+            //remove from followrs and following list
+            await usersCollection.doc(currentUid).update({
+              'following': FieldValue.arrayRemove([targetUid]),
+            });
+            await usersCollection.doc(targetUid).update({
+              'followers': FieldValue.arrayRemove([currentUid]),
+            });
+          } else {
+            //add user in followrs and following list
+            await usersCollection.doc(currentUid).update({
+              'following': FieldValue.arrayUnion([targetUid]),
+            });
+            await usersCollection.doc(targetUid).update({
+              'followers': FieldValue.arrayUnion([currentUid]),
+            });
+          }
+        }
+      }
+    } catch (e) {}
+  }
 }
