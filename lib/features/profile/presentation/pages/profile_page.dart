@@ -6,6 +6,7 @@ import 'package:social_media_app/features/post/presentation/components/post_tile
 import 'package:social_media_app/features/post/presentation/cubit/post_cubit.dart';
 import 'package:social_media_app/features/post/presentation/cubit/post_state.dart';
 import 'package:social_media_app/features/profile/presentation/components/bio_box.dart';
+import 'package:social_media_app/features/profile/presentation/components/follow_button.dart';
 import 'package:social_media_app/features/profile/presentation/cubit/profile_cubit.dart';
 import 'package:social_media_app/features/profile/presentation/pages/edit_profile_page.dart';
 
@@ -30,8 +31,21 @@ class _ProfilePageState extends State<ProfilePage> {
     profileCubit.fetchUserProfile(widget.uid);
   }
 
+  void followButtonPressed() {
+    final profileState = profileCubit.state;
+    if (profileState is! ProfileLoaded) {
+      return;
+    }
+    final profileUser = profileState.profileUser;
+    //final isFollowing
+    profileUser.followers.contains(currentUser!.uid);
+
+    profileCubit.toggleFollow(currentUser!.uid, widget.uid);
+  }
+
   @override
   Widget build(BuildContext context) {
+    bool isOwnPost = (widget.uid == currentUser!.uid);
     return BlocBuilder<ProfileCubit, ProfileState>(
       builder: (context, state) {
         if (state is ProfileLoaded) {
@@ -43,19 +57,21 @@ class _ProfilePageState extends State<ProfilePage> {
               title: Text(user.name),
               foregroundColor: Theme.of(context).colorScheme.primary,
               actions: [
-                IconButton(
-                  onPressed: () {
-                    //Edit profile page
-                    Navigator.of(context).push(
-                      MaterialPageRoute(
-                        builder: (ctx) {
-                          return EditProfilePage(user: user);
-                        },
-                      ),
-                    );
-                  },
-                  icon: const Icon(Icons.settings),
-                ),
+                if (isOwnPost)
+                  IconButton(
+                    onPressed: () {
+                      //Edit profile page
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (ctx) {
+                            return EditProfilePage(user: user);
+                          },
+                        ),
+                      );
+                    },
+                    //Edit button
+                    icon: const Icon(Icons.settings),
+                  ),
               ],
             ),
             //Body
@@ -97,6 +113,13 @@ class _ProfilePageState extends State<ProfilePage> {
                   },
                 ),
                 const SizedBox(height: 25),
+                //follow / unfollow button
+                if (!isOwnPost)
+                  FollowButton(
+                    onPressed: followButtonPressed,
+                    isFollowing: user.followers.contains(currentUser!.uid),
+                  ),
+                const SizedBox(height: 25),
                 //Bio rowText
                 Padding(
                   padding: const EdgeInsets.only(left: 25),
@@ -114,7 +137,6 @@ class _ProfilePageState extends State<ProfilePage> {
                 const SizedBox(height: 10),
                 //Bio Box
                 BioBox(bio: user.bio),
-
                 Padding(
                   padding: const EdgeInsets.only(left: 25, top: 25),
                   child: Row(
