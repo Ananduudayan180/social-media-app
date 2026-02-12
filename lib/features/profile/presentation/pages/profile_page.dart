@@ -2,6 +2,9 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:social_media_app/features/auth/presentation/cubit/auth_cubit.dart';
+import 'package:social_media_app/features/post/presentation/components/post_tile.dart';
+import 'package:social_media_app/features/post/presentation/cubit/post_cubit.dart';
+import 'package:social_media_app/features/post/presentation/cubit/post_state.dart';
 import 'package:social_media_app/features/profile/presentation/components/bio_box.dart';
 import 'package:social_media_app/features/profile/presentation/cubit/profile_cubit.dart';
 import 'package:social_media_app/features/profile/presentation/pages/edit_profile_page.dart';
@@ -19,6 +22,8 @@ class _ProfilePageState extends State<ProfilePage> {
   late final profileCubit = context.read<ProfileCubit>();
   late final currentUser = authCubit.currentUser;
 
+  //post count
+  int postCount = 0;
   @override
   void initState() {
     super.initState();
@@ -54,12 +59,14 @@ class _ProfilePageState extends State<ProfilePage> {
               ],
             ),
             //Body
-            body: Column(
+            body: ListView(
               children: [
-                Text(
-                  user.email,
-                  style: TextStyle(
-                    color: Theme.of(context).colorScheme.primary,
+                Center(
+                  child: Text(
+                    user.email,
+                    style: TextStyle(
+                      color: Theme.of(context).colorScheme.primary,
+                    ),
                   ),
                 ),
                 const SizedBox(height: 25),
@@ -113,13 +120,45 @@ class _ProfilePageState extends State<ProfilePage> {
                   child: Row(
                     children: [
                       Text(
-                        'Bio',
+                        'Posts',
                         style: TextStyle(
                           color: Theme.of(context).colorScheme.primary,
                         ),
                       ),
                     ],
                   ),
+                ),
+                const SizedBox(height: 10),
+                BlocBuilder<PostCubit, PostState>(
+                  builder: (context, state) {
+                    if (state is PostsLoaded) {
+                      //filter and get the profile user post only
+                      final userPosts = state.posts
+                          .where((post) => post.userId == widget.uid)
+                          .toList();
+
+                      postCount = userPosts.length;
+                      //Post builder in profile page
+                      return ListView.builder(
+                        itemCount: postCount,
+                        physics: const NeverScrollableScrollPhysics(),
+                        shrinkWrap: true,
+                        itemBuilder: (context, index) {
+                          final post = userPosts[index];
+                          //Post Tile
+                          return PostTile(
+                            post: post,
+                            onDeleteTap: () =>
+                                context.read<PostCubit>().deletePost(post.id),
+                          );
+                        },
+                      );
+                    } else if (state is PostsLoading) {
+                      return const Center(child: CircularProgressIndicator());
+                    } else {
+                      return const Center(child: Text('No posts'));
+                    }
+                  },
                 ),
               ],
             ),
