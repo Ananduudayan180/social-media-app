@@ -87,30 +87,32 @@ class _ProfilePageState extends State<ProfilePage> {
                 ),
                 const SizedBox(height: 25),
                 //Profile Picture
-                CachedNetworkImage(
-                  imageUrl:
-                      "${user.profileImageUrl}?v=${DateTime.now().millisecondsSinceEpoch}",
-                  //loading
-                  placeholder: (context, url) =>
-                      const CircularProgressIndicator(),
-                  errorWidget: (context, url, error) => Icon(
-                    Icons.person,
-                    size: 72,
-                    color: Theme.of(context).colorScheme.primary,
-                  ),
-                  imageBuilder: (context, imageProvider) {
-                    return Container(
-                      height: 120,
-                      width: 120,
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        image: DecorationImage(
-                          image: imageProvider,
-                          fit: BoxFit.cover,
+                Center(
+                  child: CachedNetworkImage(
+                    imageUrl:
+                        "${user.profileImageUrl}?v=${DateTime.now().millisecondsSinceEpoch}",
+                    //loading
+                    placeholder: (context, url) =>
+                        const CircularProgressIndicator(),
+                    errorWidget: (context, url, error) => Icon(
+                      Icons.person,
+                      size: 72,
+                      color: Theme.of(context).colorScheme.primary,
+                    ),
+                    imageBuilder: (context, imageProvider) {
+                      return Container(
+                        height: 120,
+                        width: 120,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          image: DecorationImage(
+                            image: imageProvider,
+                            fit: BoxFit.cover,
+                          ),
                         ),
-                      ),
-                    );
-                  },
+                      );
+                    },
+                  ),
                 ),
                 const SizedBox(height: 25),
                 //follow / unfollow button
