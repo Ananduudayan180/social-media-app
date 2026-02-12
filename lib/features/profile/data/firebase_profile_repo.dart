@@ -15,12 +15,17 @@ class FirebaseProfileRepo extends ProfileRepo {
         final userData = userDoc.data() as Map<String, dynamic>?;
 
         if (userData != null) {
+          final followers = List<String>.from(userData['followers'] ?? []);
+          final following = List<String>.from(userData['following'] ?? []);
+
           return ProfileUser(
             email: userData['email'],
             name: userData['name'],
             uid: uid,
             bio: userData['bio'] ?? '',
             profileImageUrl: userData['profileImageUrl'].toString(),
+            followers: followers,
+            following: following,
           );
         }
       }
