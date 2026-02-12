@@ -3,14 +3,13 @@ import 'package:social_media_app/features/profile/domain/entities/profile_user.d
 import 'package:social_media_app/features/profile/domain/repos/profile_repo.dart';
 
 class FirebaseProfileRepo extends ProfileRepo {
-  final CollectionReference firestore = FirebaseFirestore.instance.collection(
-    'users',
-  );
+  final CollectionReference usersCollection = FirebaseFirestore.instance
+      .collection('users');
 
   @override
   Future<ProfileUser?> fetchUserProfile(String uid) async {
     try {
-      final userDoc = await firestore.doc(uid).get();
+      final userDoc = await usersCollection.doc(uid).get();
       if (userDoc.exists) {
         final userData = userDoc.data() as Map<String, dynamic>?;
 
@@ -38,7 +37,7 @@ class FirebaseProfileRepo extends ProfileRepo {
   @override
   Future<void> updateProfile(ProfileUser updatedProfile) async {
     try {
-      await firestore.doc(updatedProfile.uid).update({
+      await usersCollection.doc(updatedProfile.uid).update({
         'bio': updatedProfile.bio,
         'profileImageUrl': updatedProfile.profileImageUrl,
       });
