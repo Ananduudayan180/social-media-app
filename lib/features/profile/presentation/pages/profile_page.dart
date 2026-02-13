@@ -7,6 +7,7 @@ import 'package:social_media_app/features/post/presentation/cubit/post_cubit.dar
 import 'package:social_media_app/features/post/presentation/cubit/post_state.dart';
 import 'package:social_media_app/features/profile/presentation/components/bio_box.dart';
 import 'package:social_media_app/features/profile/presentation/components/follow_button.dart';
+import 'package:social_media_app/features/profile/presentation/components/profile_status.dart';
 import 'package:social_media_app/features/profile/presentation/cubit/profile_cubit.dart';
 import 'package:social_media_app/features/profile/presentation/pages/edit_profile_page.dart';
 
@@ -113,6 +114,13 @@ class _ProfilePageState extends State<ProfilePage> {
                       );
                     },
                   ),
+                ),
+                const SizedBox(height: 25),
+                //profile status
+                ProfileStatus(
+                  postCount: postCount,
+                  followerCount: user.followers.length,
+                  followingCount: user.following.length,
                 ),
                 const SizedBox(height: 25),
                 //follow / unfollow button
