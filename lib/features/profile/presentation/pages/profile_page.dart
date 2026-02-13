@@ -10,6 +10,7 @@ import 'package:social_media_app/features/profile/presentation/components/follow
 import 'package:social_media_app/features/profile/presentation/components/profile_status.dart';
 import 'package:social_media_app/features/profile/presentation/cubit/profile_cubit.dart';
 import 'package:social_media_app/features/profile/presentation/pages/edit_profile_page.dart';
+import 'package:social_media_app/features/profile/presentation/pages/follower_page.dart';
 
 class ProfilePage extends StatefulWidget {
   final String uid;
@@ -121,6 +122,14 @@ class _ProfilePageState extends State<ProfilePage> {
                   postCount: postCount,
                   followerCount: user.followers.length,
                   followingCount: user.following.length,
+                  onTap: () => Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => FollowerPage(
+                        followers: user.followers,
+                        following: user.following,
+                      ),
+                    ),
+                  ),
                 ),
                 const SizedBox(height: 25),
                 //follow / unfollow button
