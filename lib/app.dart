@@ -13,7 +13,7 @@ import 'package:social_media_app/features/profile/presentation/cubit/profile_cub
 import 'package:social_media_app/features/search/data/firebase_search_repo.dart';
 import 'package:social_media_app/features/search/presentation/cubit/search_cubit.dart';
 import 'package:social_media_app/features/storage/data/supabase_storage_repo.dart';
-import 'package:social_media_app/themes/light_mode.dart';
+import 'package:social_media_app/themes/theme_cubit.dart';
 
 //root level of the app
 class MyApp extends StatelessWidget {
@@ -53,28 +53,36 @@ class MyApp extends StatelessWidget {
         BlocProvider(
           create: (context) => SearchCubit(searchRepo: firebaseSearchRepo),
         ),
+        //theme cubit
+        BlocProvider(create: (context) => ThemeCubit()),
       ],
-      child: MaterialApp(
-        debugShowCheckedModeBanner: false,
-        theme: lightMode,
-        home: BlocConsumer<AuthCubit, AuthState>(
-          builder: (context, authState) {
-            if (authState is Authenticated) {
-              return HomePage();
-            } else if (authState is Unauthenticated) {
-              return AuthPages();
-            } else {
-              //AuthLoading
-              return Scaffold(body: Center(child: CircularProgressIndicator()));
-            }
-          },
-          listener: (context, state) {
-            if (state is AuthError) {
-              ScaffoldMessenger.of(
-                context,
-              ).showSnackBar(SnackBar(content: Text(state.errorMsg)));
-            }
-          },
+      //theme cubic bloc
+      child: BlocBuilder<ThemeCubit, ThemeData>(
+        builder: (context, currentTheme) => MaterialApp(
+          debugShowCheckedModeBanner: false,
+          theme: currentTheme,
+          //auth cubit bloc
+          home: BlocConsumer<AuthCubit, AuthState>(
+            builder: (context, authState) {
+              if (authState is Authenticated) {
+                return HomePage();
+              } else if (authState is Unauthenticated) {
+                return AuthPages();
+              } else {
+                //AuthLoading
+                return Scaffold(
+                  body: Center(child: CircularProgressIndicator()),
+                );
+              }
+            },
+            listener: (context, state) {
+              if (state is AuthError) {
+                ScaffoldMessenger.of(
+                  context,
+                ).showSnackBar(SnackBar(content: Text(state.errorMsg)));
+              }
+            },
+          ),
         ),
       ),
     );
