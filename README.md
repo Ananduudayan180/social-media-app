@@ -53,5 +53,5 @@ Web deployment will be available soon.
 
 ## 👨‍💻 Developer
 
-Author: Anandhu Udayan
+Author: Anandu Udayan
 Email: anandu.dev180@gmail.com
