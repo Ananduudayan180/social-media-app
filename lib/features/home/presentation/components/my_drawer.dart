@@ -4,6 +4,7 @@ import 'package:social_media_app/features/auth/presentation/cubit/auth_cubit.dar
 import 'package:social_media_app/features/home/presentation/components/my_drawer_tile.dart';
 import 'package:social_media_app/features/profile/presentation/pages/profile_page.dart';
 import 'package:social_media_app/features/search/presentation/pages/search_page.dart';
+import 'package:social_media_app/features/settings/pages/settings_page.dart';
 
 class MyDrawer extends StatelessWidget {
   const MyDrawer({super.key});
@@ -61,7 +62,9 @@ class MyDrawer extends StatelessWidget {
               MyDrawerTile(
                 title: 'S E T T I N G S',
                 icon: Icons.settings,
-                onTap: () {},
+                onTap: () => Navigator.of(context).push(
+                  MaterialPageRoute(builder: (context) => const SettingsPage()),
+                ),
               ),
               Spacer(),
               MyDrawerTile(
