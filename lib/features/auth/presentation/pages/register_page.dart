@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:social_media_app/features/auth/presentation/component/my_botton.dart';
 import 'package:social_media_app/features/auth/presentation/component/my_text_field.dart';
 import 'package:social_media_app/features/auth/presentation/cubit/auth_cubit.dart';
+import 'package:social_media_app/features/responsive/constrained_scaffold.dart';
 
 class RegisterPage extends StatefulWidget {
   final void Function()? toggle;
@@ -58,7 +59,7 @@ class _RegisterPageState extends State<RegisterPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return ConstrainedScaffold(
       body: SafeArea(
         child: Center(
           child: Padding(

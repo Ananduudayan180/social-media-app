@@ -8,6 +8,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:social_media_app/features/auth/presentation/component/my_text_field.dart';
 import 'package:social_media_app/features/profile/domain/entities/profile_user.dart';
 import 'package:social_media_app/features/profile/presentation/cubit/profile_cubit.dart';
+import 'package:social_media_app/features/responsive/constrained_scaffold.dart';
 
 class EditProfilePage extends StatefulWidget {
   final ProfileUser user;
@@ -90,7 +91,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
   }
 
   Widget buildEditPage() {
-    return Scaffold(
+    return ConstrainedScaffold(
       appBar: AppBar(
         centerTitle: true,
         title: const Text('Edit Profile'),

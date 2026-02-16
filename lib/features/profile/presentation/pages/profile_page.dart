@@ -11,6 +11,7 @@ import 'package:social_media_app/features/profile/presentation/components/profil
 import 'package:social_media_app/features/profile/presentation/cubit/profile_cubit.dart';
 import 'package:social_media_app/features/profile/presentation/pages/edit_profile_page.dart';
 import 'package:social_media_app/features/profile/presentation/pages/follower_page.dart';
+import 'package:social_media_app/features/responsive/constrained_scaffold.dart';
 
 class ProfilePage extends StatefulWidget {
   final String uid;
@@ -52,7 +53,7 @@ class _ProfilePageState extends State<ProfilePage> {
       builder: (context, state) {
         if (state is ProfileLoaded) {
           final user = state.profileUser;
-          return Scaffold(
+          return ConstrainedScaffold(
             //AppBar
             appBar: AppBar(
               centerTitle: true,
