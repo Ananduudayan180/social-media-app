@@ -25,6 +25,7 @@ class _ProfilePageState extends State<ProfilePage> {
   late final authCubit = context.read<AuthCubit>();
   late final profileCubit = context.read<ProfileCubit>();
   late final currentUser = authCubit.currentUser;
+  ValueNotifier<bool> followButtonNotifier = ValueNotifier(false);
 
   //post count
   int postCount = 0;
@@ -40,10 +41,28 @@ class _ProfilePageState extends State<ProfilePage> {
       return;
     }
     final profileUser = profileState.profileUser;
-    //final isFollowing
-    profileUser.followers.contains(currentUser!.uid);
 
-    profileCubit.toggleFollow(currentUser!.uid, widget.uid);
+    final isFollowing = profileUser.followers.contains(currentUser!.uid);
+    //optimistically update UI
+
+    if (isFollowing) {
+      profileUser.followers.remove(currentUser!.uid);
+      followButtonNotifier.value = false;
+    } else {
+      profileUser.followers.add(currentUser!.uid);
+      followButtonNotifier.value = true;
+    }
+
+    profileCubit.toggleFollow(currentUser!.uid, widget.uid).catchError((error) {
+      //Reverse if get the error
+      if (isFollowing) {
+        profileUser.followers.add(currentUser!.uid);
+        followButtonNotifier.value = true;
+      } else {
+        profileUser.followers.remove(currentUser!.uid);
+        followButtonNotifier.value = false;
+      }
+    });
   }
 
   @override
@@ -135,9 +154,14 @@ class _ProfilePageState extends State<ProfilePage> {
                 const SizedBox(height: 25),
                 //follow / unfollow button
                 if (!isOwnPost)
-                  FollowButton(
-                    onPressed: followButtonPressed,
-                    isFollowing: user.followers.contains(currentUser!.uid),
+                  ValueListenableBuilder(
+                    valueListenable: followButtonNotifier,
+                    builder: (BuildContext context, value, Widget? child) {
+                      return FollowButton(
+                        onPressed: followButtonPressed,
+                        isFollowing: user.followers.contains(currentUser!.uid),
+                      );
+                    },
                   ),
                 const SizedBox(height: 25),
                 //Bio rowText
