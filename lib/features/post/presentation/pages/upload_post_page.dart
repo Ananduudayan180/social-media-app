@@ -5,6 +5,7 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:social_media_app/features/auth/domain/entities/app_user.dart';
+import 'package:social_media_app/features/auth/presentation/component/my_text_field.dart';
 import 'package:social_media_app/features/auth/presentation/cubit/auth_cubit.dart';
 import 'package:social_media_app/features/post/domain/entities/post.dart';
 import 'package:social_media_app/features/post/presentation/cubit/post_cubit.dart';
@@ -140,11 +141,10 @@ class _UploadPostPagesState extends State<UploadPostPage> {
                 child: Text('Pick Image'),
               ),
               SizedBox(height: 16),
-              TextField(
+              MyTextField(
                 controller: textController,
-                decoration: InputDecoration(hintText: 'Write a caption...'),
-                maxLines: null,
                 obscureText: false,
+                hintText: 'Write a caption...',
               ),
             ],
           ),
