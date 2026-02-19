@@ -51,6 +51,7 @@ class _PostTileState extends State<PostTile> {
   void fetchPostUser() async {
     final fetchUser = await profileCubit.getUserProfile(widget.post.userId);
     if (fetchUser != null) {
+      if (!mounted) return;
       setState(() {
         postUser = fetchUser;
       });
@@ -140,6 +141,7 @@ class _PostTileState extends State<PostTile> {
 
     //optimistically update the UI
     setState(() {
+      if (!mounted) return;
       if (isLiked) {
         widget.post.likes.remove(currentUser!.uid);
       } else {
@@ -151,6 +153,7 @@ class _PostTileState extends State<PostTile> {
     ) {
       //revert the like status in case of error
       setState(() {
+        if (!mounted) return;
         if (isLiked) {
           widget.post.likes.add(currentUser!.uid);
         } else {
