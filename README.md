@@ -21,9 +21,10 @@ The app uses a hybrid backend approach with Firebase and Supabase.
   </table>
 </div>
 
-## 🎥 Demo Video
+## 🔗 Links
 
-▶️ [View Demo Video](https://www.linkedin.com/posts/anandu-udayan_excited-to-share-my-latest-project-a-full-ugcPost-7434488112850038784-KmNY?utm_source=share&utm_medium=member_desktop&rcm=ACoAACfMfq4Bd2BEG7zy_XRhdsPvceyXqd0TK4c)
+- 🌐 **Live Demo:** ▶️ [View Live Demo](https://social-media-app-b5b05.web.app/)
+- 🎥 **Demo Video:** ▶️ [Watch Demo Video](https://www.linkedin.com/posts/anandu-udayan_excited-to-share-my-latest-project-a-full-ugcPost-7434488112850038784-KmNY?utm_source=share&utm_medium=member_desktop&rcm=ACoAACfMfq4Bd2BEG7zy_XRhdsPvceyXqd0TK4c)
 
 ## 🚀 Features
 
