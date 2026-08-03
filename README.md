@@ -66,8 +66,7 @@ The hybrid backend strategy improves scalability by separating authentication/da
 
 ## 📥 Web Support
 
-This application is responsive and can be used on web.
-Web deployment will be available soon.
+This application is responsive and deployed on Firebase Hosting.
 
 ## 👨‍💻 Developer
 
