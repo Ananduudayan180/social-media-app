@@ -1,7 +1,7 @@
 ## 📱 Social Media Application
 
 A full-featured social media mobile application built with Flutter.
-Users can create posts, follow and unfollow other users, search profiles, and interact in a real-time social environment.
+Users can create posts, follow and unfollow other users, search profiles, and interact in a social environment.
 The app uses a hybrid backend approach with Firebase and Supabase.
 
 ## 📸 Screenshots
